@@ -18,11 +18,11 @@ namespace WebAPI_Projeto02.Controllers
         }
 
         [HttpGet("products")]
-        public ActionResult<IEnumerable<Category>> GetCategoriesProducts()
+        public async Task<ActionResult<IEnumerable<Category>>> GetCategoriesProducts()
         {
             try
             {
-                var categories = _context.Categories.AsNoTracking().Include(p => p.Products).ToList();
+                var categories = await _context.Categories.AsNoTracking().Include(p => p.Products).ToListAsync();
 
                 if (categories is null)
                     return NotFound("Categories not found!");
@@ -36,11 +36,11 @@ namespace WebAPI_Projeto02.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Category>> Get()
+        public async Task<ActionResult<IEnumerable<Category>>> Get()
         {
             try
             {
-                var categories = _context.Categories.AsNoTracking().ToList();
+                var categories = await _context.Categories.AsNoTracking().ToListAsync();
 
                 if (categories is null)
                     return NotFound("Categories not found!");
@@ -53,10 +53,10 @@ namespace WebAPI_Projeto02.Controllers
         }
 
         [HttpGet("{id:int}", Name = "GetCategoryById")]
-        public ActionResult<Category> Get(int id) 
+        public async Task<ActionResult<Category>> Get(int id) 
         {
             try { 
-                var category = _context.Categories.AsNoTracking().FirstOrDefault(x => x.Id == id);
+                var category = await _context.Categories.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
                 if (category is null)
                     return NotFound("Category not found");

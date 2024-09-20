@@ -121,6 +121,26 @@
   },
   {
     "ContainingType": "WebAPI_Projeto02.Controllers.ProductsController",
+    "Method": "GetFirst",
+    "RelativePath": "first",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "WebAPI_Projeto02.Models.Product",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "WebAPI_Projeto02.Controllers.ProductsController",
     "Method": "Get",
     "RelativePath": "Products",
     "HttpMethod": "GET",

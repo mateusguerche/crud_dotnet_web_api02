@@ -17,11 +17,29 @@ namespace WebAPI_Projeto02.Controllers
             _context = context;
         }
 
+        [HttpGet("/first")]
+        public async Task<ActionResult<Product>> GetFirst()
+        {
+            try
+            {
+                var product = await _context.Products.FirstOrDefaultAsync();
+
+                if (product is null)
+                    return NotFound("Products not found!");
+
+                return Ok(product);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error");
+            }
+        }
+
         [HttpGet]
-        public ActionResult<IEnumerable<Product>> Get()
+        public async Task<ActionResult<IEnumerable<Product>>> Get()
         {
             try {
-                var products = _context.Products.AsNoTracking().ToList();
+                var products = await _context.Products.AsNoTracking().ToListAsync();
 
                 if (products is null)
                     return NotFound("Products not found!");
@@ -35,10 +53,10 @@ namespace WebAPI_Projeto02.Controllers
         }
 
         [HttpGet("{id:int}", Name = "GetProductById")]
-        public ActionResult<Product> Get(int id)
+        public async Task<ActionResult<Product>> Get(int id)
         {
             try {
-                var product = _context.Products.AsNoTracking().FirstOrDefault(x => x.Id == id);
+                var product = await _context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
                 if (product is null)
                     return NotFound("Product not found");

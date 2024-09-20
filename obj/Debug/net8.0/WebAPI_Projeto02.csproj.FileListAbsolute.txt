@@ -103,3 +103,4 @@ C:\Projetos\WebAPI_Projeto02\WebAPI_Projeto02\obj\Debug\net8.0\refint\WebAPI_Pro
 C:\Projetos\WebAPI_Projeto02\WebAPI_Projeto02\obj\Debug\net8.0\WebAPI_Projeto02.pdb
 C:\Projetos\WebAPI_Projeto02\WebAPI_Projeto02\obj\Debug\net8.0\WebAPI_Projeto02.genruntimeconfig.cache
 C:\Projetos\WebAPI_Projeto02\WebAPI_Projeto02\obj\Debug\net8.0\ref\WebAPI_Projeto02.dll
+C:\Projetos\WebAPI_Projeto02\WebAPI_Projeto02\obj\Debug\net8.0\WebAPI_Projeto02.sourcelink.json
