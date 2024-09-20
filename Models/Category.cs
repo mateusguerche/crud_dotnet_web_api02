@@ -16,17 +16,17 @@ namespace WebAPI_Projeto02.Models
         [Key]
         public int Id { get; set; }
 
-        [Required]
-        [StringLength(80)]
+        [Required(ErrorMessage = "The name is required")]
+        [StringLength(80, ErrorMessage = "The name must be between 5 and 80 characters", MinimumLength = 5)]
+        [RegularExpression(@"^[a-zA-Z\s]*$", ErrorMessage = "The name can only contain letters and spaces")]
         public string? Name { get; set; }
 
-        [Required]
-        [StringLength(300)]
+        [Required(ErrorMessage = "The Image URL is required")]
         public string? ImageUrl { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.Now.ToLocalTime();
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        public DateTime UpdatedAt { get; set; } = DateTime.Now.ToLocalTime();
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
         public ICollection<Product>? Products { get; set; }
     }
