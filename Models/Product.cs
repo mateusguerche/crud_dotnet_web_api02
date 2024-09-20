@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 namespace WebAPI_Projeto02.Models
 {
     [Table("products")]
-    public class Product
+    public class Product : IValidatableObject
     {
         [Key]
         public int Id { get; set; }
@@ -39,6 +39,22 @@ namespace WebAPI_Projeto02.Models
 
         public Category? Category { get; set; }
 
-
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (!string.IsNullOrEmpty(this.Name))
+            {
+                var firstLetter = this.Name[0].ToString();
+                if (firstLetter != firstLetter.ToUpper())
+                {
+                    yield return new
+                        ValidationResult("The first letter of the product name must be uppercase.",
+                        new[]
+                        {
+                            nameof(this.Name),
+                        });
+                }
+            }
+         
+        }
     }
 }

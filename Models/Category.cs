@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using WebAPI_Projeto02.Validation;
 
 namespace WebAPI_Projeto02.Models
 {
@@ -19,6 +20,7 @@ namespace WebAPI_Projeto02.Models
         [Required(ErrorMessage = "The name is required")]
         [StringLength(80, ErrorMessage = "The name must be between 5 and 80 characters", MinimumLength = 5)]
         [RegularExpression(@"^[a-zA-Z\s]*$", ErrorMessage = "The name can only contain letters and spaces")]
+        [CategoriesValidation]
         public string? Name { get; set; }
 
         [Required(ErrorMessage = "The Image URL is required")]
