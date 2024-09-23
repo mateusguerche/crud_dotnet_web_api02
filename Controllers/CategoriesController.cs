@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI_Projeto02.Context;
+using WebAPI_Projeto02.Filters;
 using WebAPI_Projeto02.Models;
 
 namespace WebAPI_Projeto02.Controllers
@@ -49,6 +50,7 @@ namespace WebAPI_Projeto02.Controllers
         }
 
         [HttpGet]
+        [ServiceFilter(typeof(ApiLoggingFilter))]
         public async Task<ActionResult<IEnumerable<Category>>> Get()
         {
             try
