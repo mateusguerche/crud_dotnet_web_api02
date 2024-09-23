@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using WebAPI_Projeto02.Context;
+using WebAPI_Projeto02.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,9 +18,6 @@ builder.Services.AddSwaggerGen();
 
 string mySqlConnection = builder.Configuration.GetConnectionString("DefaultConnection");
 
-var value1 = builder.Configuration["key1"];
-var value2 = builder.Configuration["section1:key2"];
-
 builder.Services.AddDbContext<AppDbContext>(options => 
     options.UseMySql(mySqlConnection, 
         ServerVersion.AutoDetect(mySqlConnection)));
@@ -31,12 +29,10 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.SettingsExceptionHandler();
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
