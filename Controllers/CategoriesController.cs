@@ -34,78 +34,51 @@ namespace WebAPI_Projeto02.Controllers
         [HttpGet("products")]
         public async Task<ActionResult<IEnumerable<Category>>> GetCategoriesProducts()
         {
-            try
-            {
-                var categories = await _context.Categories.AsNoTracking().Include(p => p.Products).ToListAsync();
-
-                if (categories is null)
-                    return NotFound("Categories not found!");
-
-                return Ok(categories);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error");
-            }
+            var categories = await _context.Categories.AsNoTracking().Include(p => p.Products).ToListAsync();
+            
+            if (categories is null)
+                return NotFound("Categories not found!");
+            
+            return Ok(categories);
         }
 
         [HttpGet]
         [ServiceFilter(typeof(ApiLoggingFilter))]
         public async Task<ActionResult<IEnumerable<Category>>> Get()
         {
-            try
-            {
-                var categories = await _context.Categories.AsNoTracking().ToListAsync();
-
-                if (categories is null)
-                    return NotFound("Categories not found!");
-
-                return Ok(categories);
-            }
-            catch (Exception ex) {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error");
-            }
+            var categories = await _context.Categories.AsNoTracking().ToListAsync();
+           
+            if (categories is null)
+                return NotFound("Categories not found!");
+            
+            return Ok(categories);
         }
 
         [HttpGet("{id:int}", Name = "GetCategoryById")]
         public async Task<ActionResult<Category>> Get(int id) 
         {
-            try { 
-                var category = await _context.Categories.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
-
-                if (category is null)
-                    return NotFound("Category not found");
-
-                return Ok(category);
+            var category = await _context.Categories.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
             
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error");
-            }
+            if (category is null)
+                return NotFound("Category not found");
+            
+            return Ok(category);
         }
 
         [HttpPost]
         public ActionResult Post(Category category)
         {
-            try { 
-                if(category is null)
-                    return BadRequest();
-
-                _context.Categories.Add(category);
-                _context.SaveChanges();
-                return new CreatedAtRouteResult("GetCategoryById", new { id = category.Id }, category);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error");
-            }
+            if(category is null)
+                return BadRequest();
+            
+            _context.Categories.Add(category);
+            _context.SaveChanges();
+            return new CreatedAtRouteResult("GetCategoryById", new { id = category.Id }, category);
         }
 
         [HttpPut("{id:int}")]
         public ActionResult Put(int id, Category category)
         {
-            try { 
             if (id != category.Id)
                 return NotFound("Category not found");
 
@@ -114,16 +87,11 @@ namespace WebAPI_Projeto02.Controllers
 
             return Ok(category);
         }
-            catch (Exception ex){
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error");
-            }
-        }
 
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
         {
-            try {
-                var category = _context.Categories.FirstOrDefault(p => p.Id == id);
+            var category = _context.Categories.FirstOrDefault(p => p.Id == id);
 
             if (category is null)
                 return NotFound("Category not found");
@@ -131,10 +99,6 @@ namespace WebAPI_Projeto02.Controllers
             _context.SaveChanges();
 
             return Ok(category);
-            }
-            catch (Exception ex){
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error");
-            }
         }
     }
 }
