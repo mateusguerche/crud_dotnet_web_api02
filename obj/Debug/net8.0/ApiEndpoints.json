@@ -120,6 +120,26 @@
     ]
   },
   {
+    "ContainingType": "WebAPI_Projeto02.Controllers.CategoriesController",
+    "Method": "GetValue",
+    "RelativePath": "Categories/ReadSettings",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.String",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "WebAPI_Projeto02.Controllers.ProductsController",
     "Method": "GetFirst",
     "RelativePath": "first",

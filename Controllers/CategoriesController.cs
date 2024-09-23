@@ -12,9 +12,22 @@ namespace WebAPI_Projeto02.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly AppDbContext _context;
-        public CategoriesController(AppDbContext context)
+        private readonly IConfiguration _configuration;
+        public CategoriesController(AppDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
+        }
+
+        [HttpGet("ReadSettings")]
+        public string GetValue()
+        {
+            var key1 = _configuration ["key1"];
+            var key2 = _configuration ["key2"];
+
+            var section1key2 = _configuration["section1:key2"];
+
+            return $"Key1 = {key1} \nKey2 = {key2} \nSeciotn1 => Key2 = {section1key2}";
         }
 
         [HttpGet("products")]
