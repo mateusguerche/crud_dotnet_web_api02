@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using WebAPI_Projeto02.Context;
 using WebAPI_Projeto02.Filters;
 using WebAPI_Projeto02.Models;
+using WebAPI_Projeto02.Repositories;
 
 namespace WebAPI_Projeto02.Controllers
 {
@@ -12,92 +13,72 @@ namespace WebAPI_Projeto02.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly AppDbContext _context;
-        private readonly IConfiguration _configuration;
-        public CategoriesController(AppDbContext context, IConfiguration configuration)
+        private readonly ICategoryRepository _repository;
+        private readonly ILogger<CategoriesController> _logger;
+        public CategoriesController(ICategoryRepository repository, ILogger<CategoriesController> logger)
         {
-            _context = context;
-            _configuration = configuration;
-        }
-
-        [HttpGet("ReadSettings")]
-        public string GetValue()
-        {
-            var key1 = _configuration ["key1"];
-            var key2 = _configuration ["key2"];
-
-            var section1key2 = _configuration["section1:key2"];
-
-            return $"Key1 = {key1} \nKey2 = {key2} \nSeciotn1 => Key2 = {section1key2}";
-        }
-
-        [HttpGet("products")]
-        public async Task<ActionResult<IEnumerable<Category>>> GetCategoriesProducts()
-        {
-            var categories = await _context.Categories.AsNoTracking().Include(p => p.Products).ToListAsync();
-            
-            if (categories is null)
-                return NotFound("Categories not found!");
-            
-            return Ok(categories);
+            _repository = repository;
+            _logger = logger;
         }
 
         [HttpGet]
         [ServiceFilter(typeof(ApiLoggingFilter))]
-        public async Task<ActionResult<IEnumerable<Category>>> Get()
+        public ActionResult<IEnumerable<Category>> Get()
         {
-            var categories = await _context.Categories.AsNoTracking().ToListAsync();
-           
-            if (categories is null)
-                return NotFound("Categories not found!");
-            
+            var categories = _repository.GetCategories();                      
             return Ok(categories);
         }
 
         [HttpGet("{id:int}", Name = "GetCategoryById")]
-        public async Task<ActionResult<Category>> Get(int id) 
+        public ActionResult<Category> Get(int id) 
         {
-            var category = await _context.Categories.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
-            
+            var category = _repository.GetCategory(id);
             if (category is null)
-                return NotFound("Category not found");
-            
+            {
+                _logger.LogWarning($"Category not found");
+                return NotFound($"Category not found");
+            }
             return Ok(category);
         }
 
         [HttpPost]
         public ActionResult Post(Category category)
         {
-            if(category is null)
-                return BadRequest();
-            
-            _context.Categories.Add(category);
-            _context.SaveChanges();
-            return new CreatedAtRouteResult("GetCategoryById", new { id = category.Id }, category);
+            if (category is null)
+            {
+                _logger.LogWarning($"Invalid data");
+                return BadRequest("Invalid data");
+            }
+            var newCategory = _repository.Create(category);
+
+            return new CreatedAtRouteResult("GetCategoryById", new { id = newCategory.Id }, newCategory);
         }
 
         [HttpPut("{id:int}")]
         public ActionResult Put(int id, Category category)
         {
             if (id != category.Id)
-                return NotFound("Category not found");
+            {
+                _logger.LogWarning($"Category not found");
+                return NotFound($"Category not found");
+            }
 
-            _context.Entry(category).State = EntityState.Modified;
-            _context.SaveChanges();
-
+            _repository.Update(category);
             return Ok(category);
         }
 
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
         {
-            var category = _context.Categories.FirstOrDefault(p => p.Id == id);
+            var category = _repository.GetCategory(id);
 
             if (category is null)
-                return NotFound("Category not found");
-            _context.Categories.Remove(category);
-            _context.SaveChanges();
-
+            {
+                _logger.LogWarning($"Category not found");
+                return NotFound($"Category not found");
+            }
+            
+            var removeCategoy = _repository.Delete(id);
             return Ok(category);
         }
     }

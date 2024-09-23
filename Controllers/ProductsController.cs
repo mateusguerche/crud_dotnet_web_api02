@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI_Projeto02.Context;
 using WebAPI_Projeto02.Models;
+using WebAPI_Projeto02.Repositories;
 
 namespace WebAPI_Projeto02.Controllers
 {
@@ -11,27 +12,17 @@ namespace WebAPI_Projeto02.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly AppDbContext _context;
-        public ProductsController(AppDbContext context)
-        {
-            _context = context;
-        }
+        private readonly IProductRepository _repository;
 
-        [HttpGet("/first")]
-        public async Task<ActionResult<Product>> GetFirst()
+        public ProductsController(IProductRepository repository)
         {
-            var product = await _context.Products.FirstOrDefaultAsync();
-            
-            if (product is null)
-                return NotFound("Products not found!");
-            
-            return Ok(product);
+            _repository = repository;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> Get()
+        public ActionResult<IEnumerable<Product>> Get()
         {
-            var products = await _context.Products.AsNoTracking().ToListAsync();
+            var products = _repository.GetProducts().ToList();
             
             if (products is null)
                 return NotFound("Products not found!");
@@ -40,9 +31,9 @@ namespace WebAPI_Projeto02.Controllers
         }
 
         [HttpGet("{id:int}", Name = "GetProductById")]
-        public async Task<ActionResult<Product>> Get(int id)
+        public ActionResult<Product> Get(int id)
         {
-            var product = await _context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            var product = _repository.GetProduct(id);
             
             if (product is null)
                 return NotFound("Product not found");
@@ -56,10 +47,9 @@ namespace WebAPI_Projeto02.Controllers
             if (product is null)
                 return BadRequest();
             
-            _context.Products.Add(product);
-            _context.SaveChanges();
+            var newProduct = _repository.Create(product);
             
-            return new CreatedAtRouteResult("GetProductById", new { id = product.Id }, product);
+            return new CreatedAtRouteResult("GetProductById", new { id = newProduct.Id }, newProduct);
         }
 
         [HttpPut("{id:int}")]
@@ -68,24 +58,30 @@ namespace WebAPI_Projeto02.Controllers
             if (id != product.Id)
                 return NotFound("Product not found");
             
-            _context.Entry(product).State = EntityState.Modified;
-            _context.SaveChanges();
-            
-            return Ok(product);
+            bool isProductUpdated = _repository.Update(product);
+            if (isProductUpdated)
+            {
+                return Ok(product);
+            }
+            else
+            {
+                return StatusCode(500, $"An error occurred while updating the product. Please try again.");
+            }
         }
 
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
         {
-            var product = _context.Products.FirstOrDefault(p => p.Id == id);
-            
-            if (product is null)
-                return NotFound("Product not found");
-            
-            _context.Products.Remove(product);
-            _context.SaveChanges();
-            
-            return Ok(product);
+            bool isProductUpdated = _repository.Delete(id);
+            if (isProductUpdated)
+            {
+                return Ok($"Product was successfully deleted.");
+            }
+            else
+            {
+                return StatusCode(500, "An error occurred while deleting the product. Please try again.");
+
+            }
         }
     }
 }

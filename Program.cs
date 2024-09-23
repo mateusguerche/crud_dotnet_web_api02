@@ -4,6 +4,7 @@ using WebAPI_Projeto02.Context;
 using WebAPI_Projeto02.Extensions;
 using WebAPI_Projeto02.Filters;
 using WebAPI_Projeto02.Logging;
+using WebAPI_Projeto02.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         ServerVersion.AutoDetect(mySqlConnection)));
 
 builder.Services.AddScoped<ApiLoggingFilter> ();
+
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 builder.Logging.AddProvider(new CustomLoggerProvider(new CustomLoggerProviderConfigration
 {

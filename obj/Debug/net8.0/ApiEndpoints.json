@@ -100,66 +100,6 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "WebAPI_Projeto02.Controllers.CategoriesController",
-    "Method": "GetCategoriesProducts",
-    "RelativePath": "Categories/products",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[WebAPI_Projeto02.Models.Category, WebAPI_Projeto02, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "WebAPI_Projeto02.Controllers.CategoriesController",
-    "Method": "GetValue",
-    "RelativePath": "Categories/ReadSettings",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.String",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "WebAPI_Projeto02.Controllers.ProductsController",
-    "Method": "GetFirst",
-    "RelativePath": "first",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "WebAPI_Projeto02.Models.Product",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
     "ContainingType": "WebAPI_Projeto02.Controllers.ProductsController",
     "Method": "Get",
     "RelativePath": "Products",
