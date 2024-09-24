@@ -9,7 +9,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[WebAPI_Projeto02.Models.Category, WebAPI_Projeto02, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[WebAPI_Projeto02.DTOs.CategoryDTO, WebAPI_Projeto02, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -28,12 +28,22 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "category",
-        "Type": "WebAPI_Projeto02.Models.Category",
+        "Name": "categoryDto",
+        "Type": "WebAPI_Projeto02.DTOs.CategoryDTO",
         "IsRequired": true
       }
     ],
-    "ReturnTypes": []
+    "ReturnTypes": [
+      {
+        "Type": "WebAPI_Projeto02.DTOs.CategoryDTO",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "WebAPI_Projeto02.Controllers.CategoriesController",
@@ -51,7 +61,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "WebAPI_Projeto02.Models.Category",
+        "Type": "WebAPI_Projeto02.DTOs.CategoryDTO",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -76,12 +86,22 @@
         "IsRequired": true
       },
       {
-        "Name": "category",
-        "Type": "WebAPI_Projeto02.Models.Category",
+        "Name": "categoryDto",
+        "Type": "WebAPI_Projeto02.DTOs.CategoryDTO",
         "IsRequired": true
       }
     ],
-    "ReturnTypes": []
+    "ReturnTypes": [
+      {
+        "Type": "WebAPI_Projeto02.DTOs.CategoryDTO",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "WebAPI_Projeto02.Controllers.CategoriesController",
@@ -97,7 +117,17 @@
         "IsRequired": true
       }
     ],
-    "ReturnTypes": []
+    "ReturnTypes": [
+      {
+        "Type": "WebAPI_Projeto02.DTOs.CategoryDTO",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "WebAPI_Projeto02.Controllers.ProductsController",

@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Xml.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI_Projeto02.Context;
+using WebAPI_Projeto02.DTOs;
 using WebAPI_Projeto02.Filters;
 using WebAPI_Projeto02.Models;
 using WebAPI_Projeto02.Repositories;
@@ -23,14 +25,19 @@ namespace WebAPI_Projeto02.Controllers
 
         [HttpGet]
         [ServiceFilter(typeof(ApiLoggingFilter))]
-        public ActionResult<IEnumerable<Category>> Get()
+        public ActionResult<IEnumerable<CategoryDTO>> Get()
         {
-            var categories = _uof.CategoryRepository.GetAll();                      
-            return Ok(categories);
+            var categories = _uof.CategoryRepository.GetAll();
+
+            if (categories is null)
+                return NotFound($"Category not found");
+   
+            var categoriesDto = categories.ToCategoryDTOList();
+            return Ok(categoriesDto);
         }
 
         [HttpGet("{id:int}", Name = "GetCategoryById")]
-        public ActionResult<Category> Get(int id) 
+        public ActionResult<CategoryDTO> Get(int id) 
         {
             var category = _uof.CategoryRepository.Get(c => c.Id == id);
             if (category is null)
@@ -38,39 +45,51 @@ namespace WebAPI_Projeto02.Controllers
                 _logger.LogWarning($"Category not found");
                 return NotFound($"Category not found");
             }
-            return Ok(category);
+
+            var categoryDto = category.ToCategoryDTO();         
+            return Ok(categoryDto);
         }
 
         [HttpPost]
-        public ActionResult Post(Category category)
+        public ActionResult<CategoryDTO> Post(CategoryDTO categoryDto)
         {
-            if (category is null)
+            if (categoryDto is null)
             {
                 _logger.LogWarning($"Invalid data");
                 return BadRequest("Invalid data");
             }
+            
+            var category = categoryDto.ToCategory();
+
             var newCategory = _uof.CategoryRepository.Create(category);
             _uof.Commit();
 
-            return new CreatedAtRouteResult("GetCategoryById", new { id = newCategory.Id }, newCategory);
+            var newCategoryDto = newCategory.ToCategoryDTO();
+
+            return new CreatedAtRouteResult("GetCategoryById", new { id = newCategoryDto.Id }, newCategoryDto);
         }
 
         [HttpPut("{id:int}")]
-        public ActionResult Put(int id, Category category)
+        public ActionResult<CategoryDTO> Put(int id, CategoryDTO categoryDto)
         {
-            if (id != category.Id)
+            if (id != categoryDto.Id)
             {
                 _logger.LogWarning($"Category not found");
                 return NotFound($"Category not found");
             }
 
-            _uof.CategoryRepository.Update(category);
+            var category = categoryDto.ToCategory();
+
+            var updateCategory = _uof.CategoryRepository.Update(category);
             _uof.Commit();
-            return Ok(category);
+
+            var updateCategoryDto = updateCategory.ToCategoryDTO();
+
+            return Ok(updateCategoryDto);
         }
 
         [HttpDelete("{id:int}")]
-        public ActionResult Delete(int id)
+        public ActionResult<CategoryDTO> Delete(int id)
         {
             var category = _uof.CategoryRepository.Get(c => c.Id == id);
 
@@ -82,7 +101,10 @@ namespace WebAPI_Projeto02.Controllers
             
             var removeCategory = _uof.CategoryRepository.Delete(category);
             _uof.Commit();
-            return Ok(removeCategory);
+
+            var removeCategoryDto = removeCategory.ToCategoryDTO();
+
+            return Ok(removeCategoryDto);
         }
     }
 }
