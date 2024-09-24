@@ -13,11 +13,11 @@ namespace WebAPI_Projeto02.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly ICategoryRepository _repository;
+        private readonly IUnitOfWork _uof;
         private readonly ILogger<CategoriesController> _logger;
-        public CategoriesController(ICategoryRepository repository, ILogger<CategoriesController> logger)
+        public CategoriesController(IUnitOfWork uof, ILogger<CategoriesController> logger)
         {
-            _repository = repository;
+            _uof = uof;
             _logger = logger;
         }
 
@@ -25,14 +25,14 @@ namespace WebAPI_Projeto02.Controllers
         [ServiceFilter(typeof(ApiLoggingFilter))]
         public ActionResult<IEnumerable<Category>> Get()
         {
-            var categories = _repository.GetCategories();                      
+            var categories = _uof.CategoryRepository.GetAll();                      
             return Ok(categories);
         }
 
         [HttpGet("{id:int}", Name = "GetCategoryById")]
         public ActionResult<Category> Get(int id) 
         {
-            var category = _repository.GetCategory(id);
+            var category = _uof.CategoryRepository.Get(c => c.Id == id);
             if (category is null)
             {
                 _logger.LogWarning($"Category not found");
@@ -49,7 +49,8 @@ namespace WebAPI_Projeto02.Controllers
                 _logger.LogWarning($"Invalid data");
                 return BadRequest("Invalid data");
             }
-            var newCategory = _repository.Create(category);
+            var newCategory = _uof.CategoryRepository.Create(category);
+            _uof.Commit();
 
             return new CreatedAtRouteResult("GetCategoryById", new { id = newCategory.Id }, newCategory);
         }
@@ -63,14 +64,15 @@ namespace WebAPI_Projeto02.Controllers
                 return NotFound($"Category not found");
             }
 
-            _repository.Update(category);
+            _uof.CategoryRepository.Update(category);
+            _uof.Commit();
             return Ok(category);
         }
 
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
         {
-            var category = _repository.GetCategory(id);
+            var category = _uof.CategoryRepository.Get(c => c.Id == id);
 
             if (category is null)
             {
@@ -78,8 +80,9 @@ namespace WebAPI_Projeto02.Controllers
                 return NotFound($"Category not found");
             }
             
-            var removeCategoy = _repository.Delete(id);
-            return Ok(category);
+            var removeCategory = _uof.CategoryRepository.Delete(category);
+            _uof.Commit();
+            return Ok(removeCategory);
         }
     }
 }
