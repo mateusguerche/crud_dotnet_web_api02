@@ -139,7 +139,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[WebAPI_Projeto02.Models.Product, WebAPI_Projeto02, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[WebAPI_Projeto02.DTOs.ProductDTO, WebAPI_Projeto02, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -158,12 +158,22 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "product",
-        "Type": "WebAPI_Projeto02.Models.Product",
+        "Name": "productDto",
+        "Type": "WebAPI_Projeto02.DTOs.ProductDTO",
         "IsRequired": true
       }
     ],
-    "ReturnTypes": []
+    "ReturnTypes": [
+      {
+        "Type": "WebAPI_Projeto02.DTOs.ProductDTO",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "WebAPI_Projeto02.Controllers.ProductsController",
@@ -181,7 +191,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "WebAPI_Projeto02.Models.Product",
+        "Type": "WebAPI_Projeto02.DTOs.ProductDTO",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -206,12 +216,22 @@
         "IsRequired": true
       },
       {
-        "Name": "product",
-        "Type": "WebAPI_Projeto02.Models.Product",
+        "Name": "productDto",
+        "Type": "WebAPI_Projeto02.DTOs.ProductDTO",
         "IsRequired": true
       }
     ],
-    "ReturnTypes": []
+    "ReturnTypes": [
+      {
+        "Type": "WebAPI_Projeto02.DTOs.ProductDTO",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "WebAPI_Projeto02.Controllers.ProductsController",
@@ -227,7 +247,17 @@
         "IsRequired": true
       }
     ],
-    "ReturnTypes": []
+    "ReturnTypes": [
+      {
+        "Type": "WebAPI_Projeto02.DTOs.ProductDTO",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "WebAPI_Projeto02.Controllers.ProductsController",
@@ -245,7 +275,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[WebAPI_Projeto02.Models.Product, WebAPI_Projeto02, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[WebAPI_Projeto02.DTOs.ProductDTO, WebAPI_Projeto02, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",

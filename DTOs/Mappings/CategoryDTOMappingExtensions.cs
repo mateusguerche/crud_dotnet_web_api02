@@ -1,10 +1,10 @@
 ﻿using WebAPI_Projeto02.Models;
 
-namespace WebAPI_Projeto02.DTOs
+namespace WebAPI_Projeto02.DTOs.Mappings
 {
     public static class CategoryDTOMappingExtensions
     {
-        public static CategoryDTO? ToCategoryDTO(this Category category)
+         public static CategoryDTO? ToCategoryDTO(this Category category)
         {
             if(category is  null)
                 return null;

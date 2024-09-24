@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using WebAPI_Projeto02.Context;
+using WebAPI_Projeto02.DTOs.Mappings;
 using WebAPI_Projeto02.Extensions;
 using WebAPI_Projeto02.Filters;
 using WebAPI_Projeto02.Logging;
@@ -38,6 +39,8 @@ builder.Logging.AddProvider(new CustomLoggerProvider(new CustomLoggerProviderCon
 {
     LogLevel = LogLevel.Information
 }));
+
+builder.Services.AddAutoMapper(typeof(ProductDTOMappingProfile));
 
 var app = builder.Build();
 

@@ -1,12 +1,7 @@
-﻿using System.Xml.Linq;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WebAPI_Projeto02.Context;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebAPI_Projeto02.DTOs;
+using WebAPI_Projeto02.DTOs.Mappings;
 using WebAPI_Projeto02.Filters;
-using WebAPI_Projeto02.Models;
 using WebAPI_Projeto02.Repositories;
 
 namespace WebAPI_Projeto02.Controllers

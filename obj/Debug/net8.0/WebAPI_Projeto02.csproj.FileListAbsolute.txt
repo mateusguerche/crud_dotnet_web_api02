@@ -104,3 +104,4 @@ C:\Projetos\WebAPI_Projeto02\WebAPI_Projeto02\obj\Debug\net8.0\WebAPI_Projeto02.
 C:\Projetos\WebAPI_Projeto02\WebAPI_Projeto02\obj\Debug\net8.0\WebAPI_Projeto02.genruntimeconfig.cache
 C:\Projetos\WebAPI_Projeto02\WebAPI_Projeto02\obj\Debug\net8.0\ref\WebAPI_Projeto02.dll
 C:\Projetos\WebAPI_Projeto02\WebAPI_Projeto02\obj\Debug\net8.0\WebAPI_Projeto02.sourcelink.json
+C:\Projetos\WebAPI_Projeto02\WebAPI_Projeto02\bin\Debug\net8.0\AutoMapper.dll
