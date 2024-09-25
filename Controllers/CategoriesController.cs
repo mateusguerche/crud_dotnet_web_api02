@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using WebAPI_Projeto02.DTOs;
 using WebAPI_Projeto02.DTOs.Mappings;
 using WebAPI_Projeto02.Filters;
+using WebAPI_Projeto02.Models;
+using WebAPI_Projeto02.Pagination;
 using WebAPI_Projeto02.Repositories;
 
 namespace WebAPI_Projeto02.Controllers
@@ -16,6 +19,41 @@ namespace WebAPI_Projeto02.Controllers
         {
             _uof = uof;
             _logger = logger;
+        }
+
+        [HttpGet("pagination")]
+        public ActionResult<IEnumerable<CategoryDTO>> Get([FromQuery] CategoriesParameters categoriesParameters)
+        {
+            var categories = _uof.CategoryRepository.GetCategories(categoriesParameters);
+
+            return GetCategoriesPages(categories);
+        }
+
+        [HttpGet("filter/name/pagination")]
+        public ActionResult<IEnumerable<CategoryDTO>> GetCategoriesFilters([FromQuery] CategoriesFilterName categoriesFilter)
+        {
+            var categoriesFilters = _uof.CategoryRepository.GetCategoriesFilterName(categoriesFilter);
+            
+            return GetCategoriesPages(categoriesFilters);
+        }
+
+        private ActionResult<IEnumerable<CategoryDTO>> GetCategoriesPages(PagedList<Category> categories)
+        {
+            var metadata = new
+            {
+                categories.TotalCount,
+                categories.PageSize,
+                categories.CurrentPage,
+                categories.TotalPages,
+                categories.HasNext,
+                categories.HasPrevious,
+            };
+
+            Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+
+            var categoriesDto = categories.ToCategoryDTOList();
+
+            return Ok(categoriesDto);
         }
 
         [HttpGet]

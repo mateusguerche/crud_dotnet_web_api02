@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using WebAPI_Projeto02.Context;
 using WebAPI_Projeto02.DTOs;
 using WebAPI_Projeto02.Models;
+using WebAPI_Projeto02.Pagination;
 using WebAPI_Projeto02.Repositories;
 
 namespace WebAPI_Projeto02.Controllers
@@ -33,6 +35,39 @@ namespace WebAPI_Projeto02.Controllers
                 return NotFound("Products not found!");
 
             var productsDto = _mapper.Map<IEnumerable<ProductDTO>>(products);
+            return Ok(productsDto);
+        }
+
+        [HttpGet("pagination")]
+        public ActionResult<IEnumerable<ProductDTO>> Get([FromQuery] ProductsParameters productsParameters)
+        {
+            var products = _uof.ProductRepository.GetProducts(productsParameters);
+            return GetProductsPages(products);
+        }
+
+        [HttpGet("filter/price/pagination")]
+        public ActionResult<IEnumerable<ProductDTO>> GetProductsFilterPrice([FromQuery] ProductsFilterPrice productsFilterParams)
+        {
+            var products = _uof.ProductRepository.GetProductsFilterPrice(productsFilterParams);
+            return GetProductsPages(products);
+        }
+
+        private ActionResult<IEnumerable<ProductDTO>> GetProductsPages(PagedList<Product> products)
+        {
+            var metadata = new
+            {
+                products.TotalCount,
+                products.PageSize,
+                products.CurrentPage,
+                products.TotalPages,
+                products.HasNext,
+                products.HasPrevious,
+            };
+
+            Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+
+            var productsDto = _mapper.Map<IEnumerable<ProductDTO>>(products);
+
             return Ok(productsDto);
         }
 
