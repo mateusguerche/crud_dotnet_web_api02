@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using WebAPI_Projeto02.Context;
 using WebAPI_Projeto02.DTOs.Mappings;
+using WebAPI_Projeto02.DTOs;
 using WebAPI_Projeto02.Extensions;
 using WebAPI_Projeto02.Filters;
 using WebAPI_Projeto02.Logging;
@@ -11,12 +12,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers(options => {
+builder.Services.AddControllers(options =>
+{
     options.Filters.Add(typeof(ApiExceptionFilter));
-}).AddJsonOptions(options => {
+}).AddJsonOptions(options =>
+{
     options.JsonSerializerOptions.
         ReferenceHandler = ReferenceHandler.IgnoreCycles;
-});
+}).AddNewtonsoftJson();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

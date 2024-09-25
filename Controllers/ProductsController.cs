@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI_Projeto02.Context;
@@ -73,6 +74,30 @@ namespace WebAPI_Projeto02.Controllers
             var newProductDto = _mapper.Map<ProductDTO>(newProduct);
 
             return new CreatedAtRouteResult("GetProductById", new { id = newProductDto.Id }, newProductDto);
+        }
+
+        [HttpPatch("{id}/UpdatePartial")]
+        public ActionResult<ProductDTOUpdateResponse> Patch(int id, JsonPatchDocument<ProductDTOUpdateRequest> patchProductDTO)
+        {
+            if (patchProductDTO is null || id <= 0)
+                return BadRequest("FFFF");
+
+            var product = _uof.ProductRepository.Get(p => p.Id == id);
+            if (product is null)
+                return NotFound("esta vazio");
+
+            var productUpdateRequest = _mapper.Map<ProductDTOUpdateRequest>(product);
+
+            patchProductDTO.ApplyTo(productUpdateRequest, ModelState);
+
+            if (!ModelState.IsValid || !TryValidateModel(productUpdateRequest))
+                return BadRequest(ModelState);
+
+            _mapper.Map(productUpdateRequest, product);
+            _uof.ProductRepository.Update(product);
+            _uof.Commit();
+
+            return Ok(_mapper.Map<ProductDTOUpdateResponse>(product));
         }
 
         [HttpPut("{id:int}")]
