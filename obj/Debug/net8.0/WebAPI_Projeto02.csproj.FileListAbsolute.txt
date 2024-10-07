@@ -109,3 +109,6 @@ C:\Projetos\WebAPI_Projeto02\WebAPI_Projeto02\bin\Debug\net8.0\Microsoft.AspNetC
 C:\Projetos\WebAPI_Projeto02\WebAPI_Projeto02\bin\Debug\net8.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 C:\Projetos\WebAPI_Projeto02\WebAPI_Projeto02\bin\Debug\net8.0\Newtonsoft.Json.dll
 C:\Projetos\WebAPI_Projeto02\WebAPI_Projeto02\bin\Debug\net8.0\Newtonsoft.Json.Bson.dll
+C:\Projetos\WebAPI_Projeto02\WebAPI_Projeto02\bin\Debug\net8.0\JetBrains.Annotations.dll
+C:\Projetos\WebAPI_Projeto02\WebAPI_Projeto02\bin\Debug\net8.0\X.PagedList.dll
+C:\Projetos\WebAPI_Projeto02\WebAPI_Projeto02\bin\Debug\net8.0\X.PagedList.Mvc.Core.dll

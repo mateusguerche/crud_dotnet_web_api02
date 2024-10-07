@@ -1,6 +1,7 @@
 ﻿using WebAPI_Projeto02.Context;
 using WebAPI_Projeto02.Models;
 using WebAPI_Projeto02.Pagination;
+using X.PagedList;
 
 namespace WebAPI_Projeto02.Repositories
 {
@@ -13,21 +14,25 @@ namespace WebAPI_Projeto02.Repositories
             _context = context;
         }
 
-        public PagedList<Product> GetProducts(ProductsParameters productsParams)
+        public async Task<IPagedList<Product>> GetProductsAsync(ProductsParameters productsParams)
         {
-            var products = GetAll().OrderBy(p => p.Name).AsQueryable();
-            var productsOrdered = PagedList<Product>.ToPagedList(products, productsParams.PageNumber, productsParams.PageSize);
-            return productsOrdered;
+            var products = await GetAllAsync();
+            var productsOrdered  = products.OrderBy(p => p.Name).AsQueryable();
+            //var result = PagedList<Product>.ToPagedList(productsOrdered, productsParams.PageNumber, productsParams.PageSize);
+            var result = await productsOrdered.ToPagedListAsync(productsParams.PageNumber, productsParams.PageSize);
+            return result;
         }
 
-        public IEnumerable<Product> GetProductsByCategory(int id)
+        public async Task<IEnumerable<Product>> GetProductsByCategoryAsync(int id)
         {
-            return GetAll().Where(p => p.CategoryId == id);
+            var products = await GetAllAsync();
+            var productsCategory = products.Where(p => p.CategoryId == id);
+            return productsCategory;
         }
 
-        public PagedList<Product> GetProductsFilterPrice(ProductsFilterPrice productsFilterParams)
+        public async Task<IPagedList<Product>> GetProductsFilterPriceAsync(ProductsFilterPrice productsFilterParams)
         {
-           var products = GetAll().AsQueryable();
+            var products = await GetAllAsync();
             if (productsFilterParams.Price.HasValue && !string.IsNullOrEmpty(productsFilterParams.PriceCriterion))
             {
                 if (productsFilterParams.PriceCriterion.Equals("maior", StringComparison.OrdinalIgnoreCase))
@@ -40,7 +45,8 @@ namespace WebAPI_Projeto02.Repositories
                     products = products.Where(p => p.Price == productsFilterParams.Price.Value).OrderBy(p => p.Price);
             }
 
-            var productsFilter = PagedList<Product>.ToPagedList(products, productsFilterParams.PageNumber, productsFilterParams.PageSize);
+            //var productsFilter = PagedList<Product>.ToPagedList(products.AsQueryable(), productsFilterParams.PageNumber, productsFilterParams.PageSize);
+            var productsFilter = await products.ToPagedListAsync(productsFilterParams.PageNumber, productsFilterParams.PageSize);
             return productsFilter;
         }
     }

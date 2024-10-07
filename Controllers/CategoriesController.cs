@@ -6,6 +6,7 @@ using WebAPI_Projeto02.Filters;
 using WebAPI_Projeto02.Models;
 using WebAPI_Projeto02.Pagination;
 using WebAPI_Projeto02.Repositories;
+using X.PagedList;
 
 namespace WebAPI_Projeto02.Controllers
 {
@@ -22,31 +23,31 @@ namespace WebAPI_Projeto02.Controllers
         }
 
         [HttpGet("pagination")]
-        public ActionResult<IEnumerable<CategoryDTO>> Get([FromQuery] CategoriesParameters categoriesParameters)
+        public async Task<ActionResult<IEnumerable<CategoryDTO>>> Get([FromQuery] CategoriesParameters categoriesParameters)
         {
-            var categories = _uof.CategoryRepository.GetCategories(categoriesParameters);
+            var categories = await _uof.CategoryRepository.GetCategoriesAsync(categoriesParameters);
 
             return GetCategoriesPages(categories);
         }
 
         [HttpGet("filter/name/pagination")]
-        public ActionResult<IEnumerable<CategoryDTO>> GetCategoriesFilters([FromQuery] CategoriesFilterName categoriesFilter)
+        public async Task<ActionResult<IEnumerable<CategoryDTO>>> GetCategoriesFilters([FromQuery] CategoriesFilterName categoriesFilter)
         {
-            var categoriesFilters = _uof.CategoryRepository.GetCategoriesFilterName(categoriesFilter);
+            var categoriesFilters = await _uof.CategoryRepository.GetCategoriesFilterNameAsync(categoriesFilter);
             
             return GetCategoriesPages(categoriesFilters);
         }
 
-        private ActionResult<IEnumerable<CategoryDTO>> GetCategoriesPages(PagedList<Category> categories)
+        private ActionResult<IEnumerable<CategoryDTO>> GetCategoriesPages(IPagedList<Category> categories)
         {
             var metadata = new
             {
-                categories.TotalCount,
+                categories.Count,
                 categories.PageSize,
-                categories.CurrentPage,
-                categories.TotalPages,
-                categories.HasNext,
-                categories.HasPrevious,
+                categories.PageCount,
+                categories.TotalItemCount,
+                categories.HasNextPage,
+                categories.HasPreviousPage,
             };
 
             Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
@@ -58,9 +59,9 @@ namespace WebAPI_Projeto02.Controllers
 
         [HttpGet]
         [ServiceFilter(typeof(ApiLoggingFilter))]
-        public ActionResult<IEnumerable<CategoryDTO>> Get()
+        public async Task<ActionResult<IEnumerable<CategoryDTO>>> Get()
         {
-            var categories = _uof.CategoryRepository.GetAll();
+            var categories = await _uof.CategoryRepository.GetAllAsync();
 
             if (categories is null)
                 return NotFound($"Category not found");
@@ -70,9 +71,9 @@ namespace WebAPI_Projeto02.Controllers
         }
 
         [HttpGet("{id:int}", Name = "GetCategoryById")]
-        public ActionResult<CategoryDTO> Get(int id) 
+        public async Task<ActionResult<CategoryDTO>> Get(int id) 
         {
-            var category = _uof.CategoryRepository.Get(c => c.Id == id);
+            var category = await _uof.CategoryRepository.GetAsync(c => c.Id == id);
             if (category is null)
             {
                 _logger.LogWarning($"Category not found");
@@ -84,7 +85,7 @@ namespace WebAPI_Projeto02.Controllers
         }
 
         [HttpPost]
-        public ActionResult<CategoryDTO> Post(CategoryDTO categoryDto)
+        public async Task<ActionResult<CategoryDTO>> Post(CategoryDTO categoryDto)
         {
             if (categoryDto is null)
             {
@@ -95,7 +96,7 @@ namespace WebAPI_Projeto02.Controllers
             var category = categoryDto.ToCategory();
 
             var newCategory = _uof.CategoryRepository.Create(category);
-            _uof.Commit();
+            await _uof.CommitAsync();
 
             var newCategoryDto = newCategory.ToCategoryDTO();
 
@@ -103,7 +104,7 @@ namespace WebAPI_Projeto02.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public ActionResult<CategoryDTO> Put(int id, CategoryDTO categoryDto)
+        public async Task<ActionResult<CategoryDTO>> Put(int id, CategoryDTO categoryDto)
         {
             if (id != categoryDto.Id)
             {
@@ -114,7 +115,7 @@ namespace WebAPI_Projeto02.Controllers
             var category = categoryDto.ToCategory();
 
             var updateCategory = _uof.CategoryRepository.Update(category);
-            _uof.Commit();
+            await _uof.CommitAsync();
 
             var updateCategoryDto = updateCategory.ToCategoryDTO();
 
@@ -122,9 +123,9 @@ namespace WebAPI_Projeto02.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public ActionResult<CategoryDTO> Delete(int id)
+        public async Task<ActionResult<CategoryDTO>> Delete(int id)
         {
-            var category = _uof.CategoryRepository.Get(c => c.Id == id);
+            var category = await _uof.CategoryRepository.GetAsync(c => c.Id == id);
 
             if (category is null)
             {
@@ -133,7 +134,7 @@ namespace WebAPI_Projeto02.Controllers
             }
             
             var removeCategory = _uof.CategoryRepository.Delete(category);
-            _uof.Commit();
+            await _uof.CommitAsync();
 
             var removeCategoryDto = removeCategory.ToCategoryDTO();
 
