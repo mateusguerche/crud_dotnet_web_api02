@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using WebAPI_Projeto02.DTOs;
 using WebAPI_Projeto02.DTOs.Mappings;
@@ -59,6 +60,7 @@ namespace WebAPI_Projeto02.Controllers
 
         [HttpGet]
         [ServiceFilter(typeof(ApiLoggingFilter))]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<CategoryDTO>>> Get()
         {
             var categories = await _uof.CategoryRepository.GetAllAsync();
