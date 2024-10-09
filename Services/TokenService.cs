@@ -46,7 +46,7 @@ namespace WebAPI_Projeto02.Services
             {
                 ValidateAudience = false,
                 ValidateIssuer = false,
-                ValidateIssuerSigningKey = false,
+                ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
                 ValidateLifetime = false,
             };
