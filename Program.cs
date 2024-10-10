@@ -95,6 +95,15 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("admin"));
+    options.AddPolicy("SuperAdminOnly", policy => policy.RequireRole("admin").RequireClaim("id", "mateusg"));
+    options.AddPolicy("UserOnly", policy => policy.RequireRole("User"));
+    options.AddPolicy("ExclusiveOnly", policy => policy.RequireAssertion(context => context.User.HasClaim(claim =>
+    claim.Type == "id" && claim.Value == "mateusg") || context.User.IsInRole("superadmin")));
+});
+
 builder.Services.AddScoped<ApiLoggingFilter> ();
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();

@@ -125,6 +125,7 @@ namespace WebAPI_Projeto02.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult<CategoryDTO>> Delete(int id)
         {
             var category = await _uof.CategoryRepository.GetAsync(c => c.Id == id);

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.JsonPatch;
@@ -73,6 +74,7 @@ namespace WebAPI_Projeto02.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "UserOnly")]
         public async Task<ActionResult<IEnumerable<ProductDTO>>> Get()
         {
             var products = await _uof.ProductRepository.GetAllAsync();
