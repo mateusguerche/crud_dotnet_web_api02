@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using WebAPI_Projeto02.DTOs;
@@ -11,6 +12,7 @@ using X.PagedList;
 
 namespace WebAPI_Projeto02.Controllers
 {
+    [EnableCors("AllowedOrigins")]
     [Route("[controller]")]
     [ApiController]
     public class CategoriesController : ControllerBase
@@ -60,7 +62,7 @@ namespace WebAPI_Projeto02.Controllers
 
         [HttpGet]
         [ServiceFilter(typeof(ApiLoggingFilter))]
-        [Authorize]
+        //[Authorize]
         public async Task<ActionResult<IEnumerable<CategoryDTO>>> Get()
         {
             var categories = await _uof.CategoryRepository.GetAllAsync();
@@ -72,6 +74,7 @@ namespace WebAPI_Projeto02.Controllers
             return Ok(categoriesDto);
         }
 
+        [DisableCors]
         [HttpGet("{id:int}", Name = "GetCategoryById")]
         public async Task<ActionResult<CategoryDTO>> Get(int id) 
         {

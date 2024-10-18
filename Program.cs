@@ -28,6 +28,16 @@ builder.Services.AddControllers(options =>
         ReferenceHandler = ReferenceHandler.IgnoreCycles;
 }).AddNewtonsoftJson();
 
+
+builder.Services.AddCors(options => options.AddPolicy("AllowedOrigins",
+    policy => 
+    {
+        policy.WithOrigins("http://localhost:xxxx")
+              .WithMethods("GET", "POST")
+              .AllowAnyHeader();
+    })
+);
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();
@@ -130,6 +140,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors();
+
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
